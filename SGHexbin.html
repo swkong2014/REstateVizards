@@ -10,21 +10,34 @@
         <script src="https://rawgit.com/Asymmetrik/leaflet-d3/master/dist/leaflet-d3.js" charset="utf-8"></script>
         <link rel="stylesheet" type="text/css" href="css/style.css">
 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+
+
+
         <title>R Estate Viszard</title>
     </head>
     <body>
-        <div id="map" style="width: 800px; height: 500px; border: 1px solid #ccc"></div>
-        <div id="detailsMap" style="width: 400px; height: 500px; border: 1px solid #ccc"></div>
+
+        <div id="header"><img id="logo" src="images/restatelogo.jpg" alt="REstate Vizards">
+        </div>
+        <div id="map" style="width: 1280px; height: 500px; border: 1px solid #ccc"></div>
+        <!--<div id="detailsMap" style="width: 400px; height: 500px; border: 1px solid #ccc"></div>-->
     </body>
     <script>
         // details map
 
         var center = [1.3521, 103.8198];
-        var detailsMap = L.map('detailsMap').setView(center, 13);
-
-        L.tileLayer('http://maps-{s}.onemap.sg/v2/Original/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.onemap.sg/home/TermsOfUse.html">OneMap</a> contributors'
-        }).addTo(detailsMap);
+//        var detailsMap = L.map('detailsMap').setView(center, 13);
+//
+//        L.tileLayer('http://maps-{s}.onemap.sg/v2/Original/{z}/{x}/{y}.png', {
+//            attribution: '&copy; <a href="https://www.onemap.sg/home/TermsOfUse.html">OneMap</a> contributors'
+//        }).addTo(detailsMap);
 
         function getAverage(d) {
 
@@ -42,24 +55,26 @@
         }
 
 //        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        var osmUrl = 'http://maps-{s}.onemap.sg/v2/Original/{z}/{x}/{y}.png',
+//        var osmUrl = 'http://maps-{s}.onemap.sg/v2/Original/{z}/{x}/{y}.png'
+
+        var osmUrl ='http://maps-{s}.onemap.sg/v2/Grey/{z}/{x}/{y}.png'
             osmAttrib = '&copy; <a href="https://www.onemap.sg/home/TermsOfUse.html">OneMap</a> contributors',
-            osm = L.tileLayer(osmUrl, {maxZoom: 21,  minZoom: 12, attribution: osmAttrib});
+            osm = L.tileLayer(osmUrl, {maxZoom: 18,  minZoom: 12, attribution: osmAttrib});
 
         map = new L.Map('map', {layers: [osm], center: new L.LatLng(center[0], center[1]), zoom: 12, zoomControl: false});
 
         var options = {
-            radius : 12,
+            radius : 18,
             opacity: 1,
             duration: 200
         };
 
         var hexLayer = L.hexbinLayer(options).addTo(map);
 
-        hexLayer.colorScale().range(['white', 'purple']);
+        hexLayer.colorScale().range(['cyan', 'darkblue']);
 
         hexLayer
-            .radiusRange([4, 14])
+            .radiusRange([4, 18])
             .lng(function(d) { return d[0]; })
             .lat(function(d) { return d[1]; })
             .colorValue(function(d) {
@@ -81,7 +96,7 @@
         function generateData(){
             var data = [];
 
-            d3.csv('Realis12-17_geocoded.csv', function(error, dataset) {  // NEW
+            d3.csv('data/Realis12-17_geocoded.csv', function(error, dataset) {  // NEW
                 dataset.forEach(function (d) {
                     data.push([+d.Longtitude, +d.Latitude, +d.Price_PSF, d.Project_Name]);
                 });
@@ -101,7 +116,7 @@
         hexLayer.dispatch().on('click', function(d, i) {
             console.log({ type: 'click', event: d, index: i, context: this });
             var clickedNode = d3.select(this);
-            detailsMap.setView(center, 16);
+//            detailsMap.setView(center, 16);
         });
         hexLayer.hoverHandler(L.HexbinHoverHandler.tooltip(options));
 

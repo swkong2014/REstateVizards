@@ -16,3 +16,11 @@
     border: 1px solid black;
     background-color: white;
 }
+
+#logo {
+    height:80px;
+}
+
+#map{
+    width:100%;
+}
