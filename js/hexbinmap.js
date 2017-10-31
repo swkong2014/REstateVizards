@@ -9,13 +9,14 @@ var center = [1.3521, 103.8198];
 
 function getAverage(d) {
 
-    var total = 0
+    var total = 0;
 //                console.log(d.length);
 //                console.log(d);
-
+//
+//     console.log(d);
     for(var record in d){
         if(record != 'x' && record != 'y')
-            total += d[record]['o'][2];
+            total += d[record]['o'].Price_PSF;
     }
 
 //                return d[2];
@@ -43,17 +44,17 @@ hexLayer.colorScale().range(['cyan', 'darkblue']);
 
 hexLayer
     .radiusRange([4, 18])
-    .lng(function(d) { return d[0]; })
-    .lat(function(d) { return d[1]; })
+    .lng(function(d) { return d.Longtitude; })
+    .lat(function(d) { return d.Latitude; })
     .colorValue(function(d) {
 
-        var total = 0
+        var total = 0;
 //                console.log(d.length);
 //                console.log(d);
 
         for(var record in d){
             if(record != 'x' && record != 'y')
-                total += d[record]['o'][2];
+                total += d[record]['o'].Price_PSF;
         }
 
 //                return d[2];
@@ -61,18 +62,31 @@ hexLayer
     })
     .radiusValue(function(d) { return d.length; });
 
-function generateData(){
-    var data = [];
+var pricePSF = [];
+// function generateData(){
+//     var data = [];
+//
+//     d3.csv('data/Realis12-17_geocoded.csv', function(error, dataset) {  // NEW
+//         dataset.forEach(function (d) {
+//             d.Price_PSF = +d.Price_PSF;
+//             // data.push([+d.Longtitude, +d.Latitude, d.Price_PSF, d.Project_Name]);
+//         });
+//
+//         var crossFilter = crossfilter(dataset);
+//
+//         var pricePSF = crossFilter.dimension(function(d) {return (d.Price_PSF)});
+//         //console.log(pricePSF.filter([50,1000]));
+//
+//         //console.log(pricePSF.top(Infinity));
+//         // hexLayer.data(data);
+//         hexLayer.data(pricePSF.top(Infinity));
+//
+//
+//     });
+// };
+// generateData();
 
-    d3.csv('data/Realis12-17_geocoded.csv', function(error, dataset) {  // NEW
-        dataset.forEach(function (d) {
-            data.push([+d.Longtitude, +d.Latitude, +d.Price_PSF, d.Project_Name]);
-        });
 
-        hexLayer.data(data);
-    });
-};
-generateData();
 
 var options = {
     tooltipContent: function(d) {
@@ -85,21 +99,18 @@ var options = {
 hexLayer.dispatch().on('click', function(d, i) {
     console.log({ type: 'click', event: d, index: i, context: this });
     var clickedNode = d3.select(this);
+    // resetData();
     // console.log(hexBinData);
 //            detailsMap.setView(center, 16);
 
-
-    // d.SaleDate = dateParser(d.SaleDate);
-    // d.PlanningArea = d.PlanningArea;
-    // d.psf = +d.psf
-    // d.Level = +d.Level
-    // d.Area = +d.Area;
 });
 hexLayer.hoverHandler(L.HexbinHoverHandler.tooltip(options));
 
+function redrawMap(){
+    hexLayer.data(PlanningRegionDim.top(Infinity));
+}
     // array of dictionaries
 function addData(){
-
 
 }
 

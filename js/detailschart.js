@@ -8,6 +8,7 @@ var TransLineChart = dc.lineChart('#TransLine')
 var test = dc.rowChart('#test')
 
 var realis = crossfilter();
+var PlanningRegionDim = null;
 d3v3.csv('data/Realis12-17_geocoded.csv', function(error, data) {
     if(error) throw error;
 
@@ -20,9 +21,6 @@ d3v3.csv('data/Realis12-17_geocoded.csv', function(error, data) {
         d.Area = +d.Area_sqm;
     });
 
-    console.log(data);
-
-    hexBinData = data;
     // Preparing Dimensions and Groups
     realis = crossfilter(data),
         all = realis.groupAll();
@@ -30,9 +28,11 @@ d3v3.csv('data/Realis12-17_geocoded.csv', function(error, data) {
     var ProjectNameDim = realis.dimension(function(d) {return d.Project_Name});
     var psfDim = realis.dimension(function(d) {return d.Price_PSF});
     var SaleDateDim = realis.dimension(function(d) {return (d.Sale_Date)});
-    var PlanningRegionDim = realis.dimension(function(d) {return d.Planning_Region});
+    PlanningRegionDim = realis.dimension(function(d) {return d.Planning_Region});
     var AllDim = realis.dimension(function(d) {return d});
 
+    //init hexlayer
+    hexLayer.data(PlanningRegionDim.top(Infinity));
 
     // var ProjectNameGroup = ProjectNameDim.group();
     var transTotal = SaleDateDim.group()
@@ -120,7 +120,7 @@ d3v3.csv('data/Realis12-17_geocoded.csv', function(error, data) {
 
 })
 
-function resetData(dimensions) {
+function resetData() {
     var priceChartFilters = PriceLineChart.filters();
     var transChartFilters = TransLineChart.filters();
     PriceLineChart.filter(null);
