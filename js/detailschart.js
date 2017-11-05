@@ -9,6 +9,9 @@ var test = dc.rowChart('#test')
 
 var realis = crossfilter();
 var PlanningRegionDim = null;
+var SalesTypeDim = null;
+var PropertyTypeDim = null;
+var SaleDateDim = null;
 d3v3.csv('data/Realis12-17_geocoded.csv', function(error, data) {
     if(error) throw error;
 
@@ -25,11 +28,14 @@ d3v3.csv('data/Realis12-17_geocoded.csv', function(error, data) {
     realis = crossfilter(data),
         all = realis.groupAll();
 
-    var ProjectNameDim = realis.dimension(function(d) {return d.Project_Name});
-    var psfDim = realis.dimension(function(d) {return d.Price_PSF});
-    var SaleDateDim = realis.dimension(function(d) {return (d.Sale_Date)});
+    //var ProjectNameDim = realis.dimension(function(d) {return d.Project_Name});
+    // var psfDim = realis.dimension(function(d) {return d.Price_PSF});
+    SaleDateDim = realis.dimension(function(d) {return (d.Sale_Date)});
     PlanningRegionDim = realis.dimension(function(d) {return d.Planning_Region});
-    var AllDim = realis.dimension(function(d) {return d});
+    SalesTypeDim = realis.dimension(function(d) {return d.Type_of_Sale});
+    PropertyTypeDim = realis.dimension(function(d) {return d.Property_Type});
+
+    // var AllDim = realis.dimension(function(d) {return d});
 
     //init hexlayer
     hexLayer.data(PlanningRegionDim.top(Infinity));

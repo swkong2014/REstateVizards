@@ -62,32 +62,6 @@ hexLayer
     })
     .radiusValue(function(d) { return d.length; });
 
-var pricePSF = [];
-// function generateData(){
-//     var data = [];
-//
-//     d3.csv('data/Realis12-17_geocoded.csv', function(error, dataset) {  // NEW
-//         dataset.forEach(function (d) {
-//             d.Price_PSF = +d.Price_PSF;
-//             // data.push([+d.Longtitude, +d.Latitude, d.Price_PSF, d.Project_Name]);
-//         });
-//
-//         var crossFilter = crossfilter(dataset);
-//
-//         var pricePSF = crossFilter.dimension(function(d) {return (d.Price_PSF)});
-//         //console.log(pricePSF.filter([50,1000]));
-//
-//         //console.log(pricePSF.top(Infinity));
-//         // hexLayer.data(data);
-//         hexLayer.data(pricePSF.top(Infinity));
-//
-//
-//     });
-// };
-// generateData();
-
-
-
 var options = {
     tooltipContent: function(d) {
         var content = "No. of Transactions: " + d.length +
@@ -106,7 +80,38 @@ hexLayer.dispatch().on('click', function(d, i) {
 });
 hexLayer.hoverHandler(L.HexbinHoverHandler.tooltip(options));
 
+//
+
 function redrawMap(){
+    hexLayer.data(PlanningRegionDim.top(Infinity));
+}
+
+function filterSalesType(salesType){
+    if (salesType){
+        SalesTypeDim.filter(function(d){
+            return salesType === d;
+        });
+    } else {
+        SalesTypeDim.filter(salesType);
+    }
+
+    hexLayer.data(PlanningRegionDim.top(Infinity));
+}
+
+function filterPropertyType(propertyType){
+    if (propertyType){
+        PropertyTypeDim.filter(function(d){
+            return propertyType === d;
+        });
+    } else {
+        PropertyTypeDim.filterAll();
+    }
+    hexLayer.data(PlanningRegionDim.top(Infinity));
+}
+
+function resetFilters(){
+    SalesTypeDim.filterAll();
+    PropertyTypeDim.filterAll();
     hexLayer.data(PlanningRegionDim.top(Infinity));
 }
     // array of dictionaries
