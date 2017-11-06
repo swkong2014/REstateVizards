@@ -14,7 +14,25 @@
         <script src ='js/crossfilter.js'></script>
         <script src ='js/dc.js'></script>
         <link rel='stylesheet' href='css/dc.css'>
+        <link rel="stylesheet" href="css/iThing.css" type="text/css" />
 
+        <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+        <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+
+        <!-- for DATE RANGE SLIDER -->
+        <link rel="stylesheet" href="css/iThing.css" type="text/css" />
+        <script src="js/jQRangeSlider/jquery.mousewheel.min.js"></script>
+        <script src="js/jQRangeSlider/jQRangeSliderMouseTouch.js"></script>
+        <script src="js/jQRangeSlider/jQRangeSliderDraggable.js"></script>
+        <script src="js/jQRangeSlider/jQRangeSliderHandle.js"></script>
+        <script src="js/jQRangeSlider/jQRangeSliderBar.js"></script>
+        <script src="js/jQRangeSlider/jQRangeSliderLabel.js"></script>
+        <script src="js/jQRangeSlider/jQRangeSlider.js"></script>
+        <script src="js/jQRangeSlider/jQDateRangeSliderHandle.js"></script>
+        <script src="js/jQRangeSlider/jQDateRangeSlider.js"></script>
+        <script src="js/jQRangeSlider/jQEditRangeSliderLabel.js"></script>
+        <script src="js/jQRangeSlider/jQEditRangeSlider.js"></script>
+        <!-- for DATE RANGE SLIDER -->
 
         <title>R Estate Vizard</title>
     </head>
@@ -32,6 +50,9 @@
             <button type="button" onclick="filterSalesType('New Sale');dc.redrawAll();">New Sales</button>
             <button type="button" onclick="resetFilters();dc.redrawAll();">Reset Filters</button>
         </div>
+
+        <div id="slider"></div>
+
         <div id="map" style="width: 1280px; height: 500px; border: 1px solid #ccc"></div>
         <div class="row">
             <div id="PriceLine">
@@ -87,4 +108,31 @@
     <script src="js/hexbinmap.js" type="text/javascript"></script>
 
     <script src ='js/detailschart.js' type ='text/javascript'></script>
+
+    <script>
+        $("#slider").dateRangeSlider({
+            range: {min: new Date(2012, 0, 1)}, //use minimum range
+            bounds: {
+                   min: new Date(2012, 0, 1),
+                   max: new Date(2017, 9, 30)
+                    },
+            defaultValues: {
+                   min: new Date(2012, 0, 1),
+                   max: new Date(2012, 5, 30)
+                    }
+
+        });
+
+        var currMinDate = new Date(2012, 0, 1);
+        var currMaxDate = new Date(2017, 9, 31);
+
+        $("#slider").on("valuesChanged", function(e, data){
+            currMinDate = data.values.min;
+            currMaxDate = data.values.max;
+            console.log("min: " + currMinDate + " max: " + currMaxDate);
+            
+            filterDate(currMinDate, currMaxDate);
+        });
+
+    </script>
 </html>
