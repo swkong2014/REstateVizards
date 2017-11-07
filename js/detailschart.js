@@ -1,27 +1,32 @@
 var dateParser = d3v3.time.format("%d-%b-%y").parse;
 var setFormat = d3v3.time.format('%b-%y');
 var dateParser2 = d3v3.time.format('%b-%y').parse;
+var setFormat2 = d3v3.time.format('%Y');
 
-var PriceLineChart = dc.lineChart('#PriceLine')
-var TransLineChart = dc.lineChart('#TransLine')
-// var ScatterChart = dc.bubbleChart('#Scatter');
-var test = dc.rowChart('#test')
+var TransBarChart = dc.barChart('#TransBar')
+var ScatterChart = dc.scatterPlot('#Scatter');
+var PriceBoxPlot = dc.boxPlot('#box-test')
+
 
 var realis = crossfilter();
 var PlanningRegionDim = null;
-var SalesTypeDim = null;
-var PropertyTypeDim = null;
 var SaleDateDim = null;
-d3v3.csv('data/Realis12-17_geocoded.csv', function(error, data) {
+var PlanningRegionDim = null;
+var AllDim = null;
+var yearDimension = null;
+var monthDimension = null; 
+var scatterDim = null;
+
+d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
     if(error) throw error;
 
 
     data.forEach(function(d){
         d.Sale_Date = dateParser(d.Sale_Date);
-        // d.PlanningArea = d.Planning_Area;
-        d.Price_PSF = +d.Price_PSF;
-        // d.Level = +d.Level;
-        d.Area = +d.Area_sqm;
+        d.Planning_Area = d.Planning_Area; 
+        d.Price_PSF = +d.Price_PSF
+        d.Level = +d.Level
+        d.Area_sqm = +d.Area_sqm;
     });
 
     // Preparing Dimensions and Groups
@@ -32,6 +37,10 @@ d3v3.csv('data/Realis12-17_geocoded.csv', function(error, data) {
     // var psfDim = realis.dimension(function(d) {return d.Price_PSF});
     SaleDateDim = realis.dimension(function(d) {return (d.Sale_Date)});
     PlanningRegionDim = realis.dimension(function(d) {return d.Planning_Region});
+    AllDim = realis.dimension(function(d) {return d});
+    yearDimension = realis.dimension(function(d) {return d3v3.time.year(d.Sale_Date)});
+    monthDimension = realis.dimension(function(d) {return d3v3.time.month(d.Sale_Date)}) ;
+    scatterDim = realis.dimension(function(d) {return [d.Level, d.Price_PSF, d.Project_Name]});
     SalesTypeDim = realis.dimension(function(d) {return d.Type_of_Sale});
     PropertyTypeDim = realis.dimension(function(d) {return d.Property_Type});
 
@@ -41,97 +50,85 @@ d3v3.csv('data/Realis12-17_geocoded.csv', function(error, data) {
     hexLayer.data(PlanningRegionDim.top(Infinity));
 
     // var ProjectNameGroup = ProjectNameDim.group();
-    var transTotal = SaleDateDim.group()
+    var scatterGroup = scatterDim.group();
+    var transTotal = monthDimension.group()
         .reduceCount(function(d) { return d.Price_PSF; });
     var psmGroup = SaleDateDim.group();
     var PlanningRegionGroup = PlanningRegionDim.group()
         .reduceCount(function(d) { return d.Planning_Region; });
-    var psmAverage = SaleDateDim.group().reduce(reduceAdd, reduceRemove, reduceInitial);
-
-    function reduceAdd(p, v) {
-        p.count = p.count + 1;
-        p.total = p.total + v.Price_PSF;
-        p.avg = Math.round(p.total / p.count);
-        return p;
-    }
-
-    function reduceRemove(p, v) {
-        p.count = p.count - 1;
-        p.total = p.total - v.Price_PSF;
-        p.avg = p.count ? Math.round(p.total / p.count) : 0;
-        return p;
-    }
-
-    function reduceInitial() {
-        return {count: 0, total: 0, avg: 0};
-    }
+    var BoxGroup  = yearDimension.group().reduce(
+            function(p,v) {
+            p.push(v.Price_PSF);
+            return p;
+            },
+            function(p,v) {
+            p.splice(p.indexOf(v.Price_PSF), 1);
+            return p;
+            },
+            function() {
+            return [];
+            }
+        );
 
     // Creating Line Chart
-    PriceLineChart /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
+    PriceBoxPlot /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
         .width(990)
         .height(300)
         .transitionDuration(1000)
         .margins({top: 30, right: 50, bottom: 25, left: 40})
-        .dimension(SaleDateDim)
-        .group(psmAverage)
-        .valueAccessor(function (d) {
-            return d.value.avg;
-        })
-        .brushOn(false)
-        .title(function(d){
-            return setFormat(d.key)
-                + "\nAverage PSM: " + d.value.avg;
-        })
-        .round(d3v3.time.month.round)
-        .xUnits(d3v3.time.months)
-        .elasticY(true)
-        .x(d3v3.time.scale().domain(d3v3.extent(data,function(d) {return d.Sale_Date})))
-        .y(d3v3.scale.linear().domain(d3v3.extent(data, function(d) {return d.Price_PSF})))
-        .xAxis();
-    // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
-    // .rangeChart(volumeChart)
-    // .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-    // .round(d3.time.month.round)
-    // .xUnits(d3.time.months)
-    // .elasticY(true)
-    // .renderHorizontalGridLines(true)
+        .dimension(yearDimension)
+        .group(BoxGroup)
+        .y(d3v3.scale.linear().domain([0,6000]))
+        .yAxisLabel("PSF")
+        .xAxis().tickFormat( function(v)                
+        { return setFormat2(v)});
 
-    TransLineChart /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
+    TransBarChart /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
         .width(990)
         .height(300)
         .transitionDuration(1000)
         .margins({top: 30, right: 50, bottom: 25, left: 40})
-        .dimension(SaleDateDim)
+        .dimension(monthDimension)
         .group(transTotal)
-        .brushOn(false)
-
-        // .valueAccessor(function (d) {
-        //         return d.value.avg;
-        //     })
+        .x(d3v3.time.scale().domain(d3v3.extent(data, function(d) {return (d.Sale_Date)})))
+        .yAxisLabel("No. of Transactions")
         .title(function(d){
-            return setFormat(d.key)
-                + "\nNo. of Transactions: " + d.value;
-        })
-        .elasticY(true)
-        .x(d3v3.time.scale()
-            .domain(d3v3.extent(data,function(d) {return d.Sale_Date})))
-        .xAxis();
+            return 'Date: ' + setFormat(d.key)
+            + "\nNo. of Transactions: " + d.value;
+            })
+        .brushOn(false)
+        .xUnits(d3v3.time.months)
+        .elasticY(true);
 
-    test
-        .dimension(PlanningRegionDim)
-        .group(PlanningRegionGroup)
-        .elasticX(true);
+    ScatterChart
+        .height(300)
+        .x(d3v3.scale.linear().domain([0, 100]))
+        .yAxisLabel("y")
+        .xAxisLabel("x")
+        .clipPadding(10)
+        .dimension(scatterDim)
+        .group(scatterGroup)
+        .x(d3v3.scale.linear().domain(d3.extent(data, function(d) {return (d.Level)})))
+        .brushOn(false)
+        .nonemptyOpacity(0.3)
+        .title(function(d){
+            return  'Project: ' + d.key[2] + '\nLevel: ' + d.key[0] + '\nPSM: $' + d.key[1];
+            });
+
 
     dc.renderAll();
 
 })
 
 function resetData() {
-    var priceChartFilters = PriceLineChart.filters();
-    var transChartFilters = TransLineChart.filters();
-    PriceLineChart.filter(null);
+    var PriceBoxPlot = PriceBoxPlot.filters();
+    var TransBarChart = TransBarChart.filters();
+    var ScatterChart = ScatterChart.filters();
+    PriceBoxPlot.filter(null);
+    TransBarChart.filter(null);
     TransLineChart.filter(null);
     realis.remove();
-    PriceLineChart.filter([priceChartFilters]);
-    TransLineChart.filter([transChartFilters]);
+    PriceBoxPlot.filter([priceChartFilters]);
+    TransBarChart.filter([transChartFilters]);
+    ScatterChart.filter([transChartFilters]);
 }

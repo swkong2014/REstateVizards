@@ -55,51 +55,42 @@
 
         <div id="map" style="width: 1280px; height: 500px; border: 1px solid #ccc"></div>
         <div class="row">
-            <div id="PriceLine">
-                <h4>Line Chart</h4>
-                <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong>
+            <div id="box-test">
+                <h4>Box Plot</h4>
+                <strong>Price Distribution</strong>
                 <span class="reset" style="display: none;">range: <span class="filter"></span></span>
-                <a class="reset" href="javascript:PriceLineChart.filterAll();dc.redrawAll();"
-                   style="display: none;">reset</a>
-                <!--<div class="clearfix"></div>-->
-            </div>
-        </div>
-
-        <div class="row">
-            <div id="TransLine">
-                <h4>Line Chart</h4>
-                <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong>
-                <span class="reset" style="display: none;">range: <span class="filter"></span></span>
-                <a class="reset" href="javascript:TransLineChart.filterAll();dc.redrawAll();"
-                   style="display: none;">reset</a>
-
-                <!--<div class="clearfix"></div>-->
-            </div>
-        </div>
-
-        <!-- <div class="row">
-                <div id="Scatter">
-                    <h4>Scatter</h4>
-                    <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong>
-                    <span class="reset" style="display: none;">range: <span class="filter"></span></span>
-                    <a class="reset" href="javascript:TransLineChart.filterAll();dc.redrawAll();"
-                        style="display: none;">reset</a>
-
-                    <div class="clearfix"></div>
-                </div>
-            </div> -->
-
-        <div class="row">
-            <div id="test">
-                <h4>test</h4>
-                <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong>
-                <span class="reset" style="display: none;">range: <span class="filter"></span></span>
-                <a class="reset" href="javascript:TransLineChart.filterAll();dc.redrawAll();"
-                   style="display: none;">reset</a>
-
+                <a class="reset" href="javascript:PriceBoxPlot.filterAll();dc.redrawAll();"
+                    style="display: none;">reset</a>
+    
                 <div class="clearfix"></div>
             </div>
         </div>
+    
+                
+        <div class="row">
+                <div id="TransBar">
+                    <h4>Line Chart</h4>
+                    <strong>Historical Volume Transaction </strong>
+                    <span class="reset" style="display: none;">range: <span class="filter"></span></span>
+                    <a class="reset" href="javascript:PriceBoxPlot.filterAll();dc.redrawAll();"
+                        style="display: none;">reset</a>
+            
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+    
+    
+        <div class="row">
+                <div id="Scatter">
+                    <h4>Scatterplot</h4>
+                    <strong>Relationship between Price and PSM</strong>
+                    <span class="reset" style="display: none;">range: <span class="filter"></span></span>
+                    <a class="reset" href="javascript:PriceBoxPlot.filterAll();dc.redrawAll();"
+                        style="display: none;">reset</a>
+            
+                    <div class="clearfix"></div>
+                </div>
+            </div>
 
 
 
