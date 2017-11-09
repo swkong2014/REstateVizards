@@ -10,16 +10,10 @@ var center = [1.3521, 103.8198];
 function getAverage(d) {
 
     var total = 0;
-//                console.log(d.length);
-//                console.log(d);
-//
-//     console.log(d);
     for(var record in d){
         if(record != 'x' && record != 'y')
             total += d[record]['o'].Price_PSF;
     }
-
-//                return d[2];
     return Math.round(total / d.length * 100) /100  ;
 }
 
@@ -76,7 +70,6 @@ hexLayer.dispatch().on('click', function(d, i) {
     // resetData();
     // console.log(hexBinData);
 //            detailsMap.setView(center, 16);
-
 });
 hexLayer.hoverHandler(L.HexbinHoverHandler.tooltip(options));
 
@@ -112,8 +105,9 @@ function filterPropertyType(propertyType){
 function filterDate(startDate, endDate){
     SaleDateDim.filter(function(d){
         return d >= startDate && d <= endDate;
-    })
+    });
     hexLayer.data(PlanningRegionDim.top(Infinity));
+    // PriceLineChart.
 }
 
 function resetFilters(){
