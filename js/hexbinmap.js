@@ -14,20 +14,24 @@ function getAverage(d) {
         if(record != 'x' && record != 'y')
             total += d[record]['o'].Price_PSF;
     }
-    return Math.round(total / d.length * 100) /100  ;
+    return Math.round(total / d.length * 100) /100;
 }
 
 //        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 //        var osmUrl = 'http://maps-{s}.onemap.sg/v2/Original/{z}/{x}/{y}.png'
 
-var osmUrl ='http://maps-{s}.onemap.sg/v2/Grey/{z}/{x}/{y}.png'
-osmAttrib = '&copy; <a href="https://www.onemap.sg/home/TermsOfUse.html">OneMap</a> contributors',
-    osm = L.tileLayer(osmUrl, {maxZoom: 18,  minZoom: 12, attribution: osmAttrib});
+var osmUrl =
+// 'http://maps-{s}.onemap.sg/v2/Grey/{z}/{x}/{y}.png'
+'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
+osmAttrib = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy;' +
+    '<a href="https://carto.com/attribution">CARTO</a>'
+    // '&copy; <a href="https://www.onemap.sg/home/TermsOfUse.html">OneMap</a> contributors',
+    osm = L.tileLayer(osmUrl, {maxZoom: 11,  minZoom: 11, attribution: osmAttrib });
 
-map = new L.Map('map', {layers: [osm], center: new L.LatLng(center[0], center[1]), zoom: 12, zoomControl: false});
+map = new L.Map('map', {layers: [osm], center: new L.LatLng(center[0], center[1]), zoom: 11, zoomControl:false});
 
 var options = {
-    radius : 18,
+    radius : 14,
     opacity: 1,
     duration: 200
 };
@@ -37,9 +41,9 @@ var hexLayer = L.hexbinLayer(options).addTo(map);
 hexLayer.colorScale().range(['cyan', 'darkblue']);
 
 hexLayer
-    .radiusRange([4, 18])
-    .lng(function(d) { return d.Longtitude; })
-    .lat(function(d) { return d.Latitude; })
+    .radiusRange([4, 14])
+    .lng(function(d) { return +d.Longtitude; })
+    .lat(function(d) { return +d.Latitude; })
     .colorValue(function(d) {
 
         var total = 0;
@@ -64,20 +68,23 @@ var options = {
     }
 };
 
-hexLayer.dispatch().on('click', function(d, i) {
-    console.log({ type: 'click', event: d, index: i, context: this });
-    var clickedNode = d3.select(this);
-    // resetData();
-    // console.log(hexBinData);
-//            detailsMap.setView(center, 16);
-});
-hexLayer.hoverHandler(L.HexbinHoverHandler.tooltip(options));
-
-//
-
-function redrawMap(){
-    hexLayer.data(PlanningRegionDim.top(Infinity));
+setOnclick();
+function setOnclick(){
+    hexLayer.dispatch().on('click', function(d, i) {
+        console.log({ type: 'click', event: d, index: i, context: this });
+    });
+    console.log(hexLayer);
+    // console.log(hexLayer.dispatch());
 }
+
+hexLayer.hoverHandler(L.HexbinHoverHandler.compound({
+    handlers: [
+        L.HexbinHoverHandler.resizeFill(),
+        L.HexbinHoverHandler.tooltip(options)
+    ]
+}));
+
+// console.log(hexLayer.test());
 
 function filterSalesType(salesType){
     if (salesType){
@@ -87,8 +94,10 @@ function filterSalesType(salesType){
     } else {
         SalesTypeDim.filter(salesType);
     }
-
+    console.log(hexLayer.data());
     hexLayer.data(PlanningRegionDim.top(Infinity));
+    hexLayer.redraw();
+    console.log(hexLayer.data());
 }
 
 function filterPropertyType(propertyType){
@@ -107,6 +116,9 @@ function filterDate(startDate, endDate){
         return d >= startDate && d <= endDate;
     });
     hexLayer.data(PlanningRegionDim.top(Infinity));
+    hexLayer.dispatch().on('click',null);
+    // setOnclick();
+    // setOnclick();
     // PriceLineChart.
 }
 

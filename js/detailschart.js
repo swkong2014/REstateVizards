@@ -3,9 +3,10 @@ var setFormat = d3v3.time.format('%b-%y');
 var dateParser2 = d3v3.time.format('%b-%y').parse;
 var setFormat2 = d3v3.time.format('%Y');
 
-var TransBarChart = dc.barChart('#TransBar')
-var ScatterChart = dc.scatterPlot('#Scatter');
-var PriceBoxPlot = dc.boxPlot('#box-test')
+var TransBarChart = dc.barChart('#TransBar');
+var PriceLineChart = dc.lineChart('#PriceLine');
+// var ScatterChart = dc.scatterPlot('#Scatter');
+// var PriceBoxPlot = dc.boxPlot('#box-test')
 
 
 var realis = crossfilter();
@@ -16,7 +17,6 @@ var AllDim = null;
 var yearDimension = null;
 var monthDimension = null; 
 var scatterDim = null;
-
 d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
     if(error) throw error;
 
@@ -43,14 +43,16 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
     scatterDim = realis.dimension(function(d) {return [d.Level, d.Price_PSF, d.Project_Name]});
     SalesTypeDim = realis.dimension(function(d) {return d.Type_of_Sale});
     PropertyTypeDim = realis.dimension(function(d) {return d.Property_Type});
+    var psfAverage = monthDimension.group().reduce(reduceAdd, reduceRemove, reduceInitial);
 
     // var AllDim = realis.dimension(function(d) {return d});
 
     //init hexlayer
+    console.log(hexLayer.data());
     hexLayer.data(PlanningRegionDim.top(Infinity));
-
+    console.log(hexLayer.data());
     // var ProjectNameGroup = ProjectNameDim.group();
-    var scatterGroup = scatterDim.group();
+    // var scatterGroup = scatterDim.group();
     var transTotal = monthDimension.group()
         .reduceCount(function(d) { return d.Price_PSF; });
     var psmGroup = SaleDateDim.group();
@@ -71,21 +73,29 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
         );
 
     // Creating Line Chart
-    PriceBoxPlot /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
-        .width(990)
-        .height(300)
+    PriceLineChart /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
+        .width(500)
+        .height(150)
         .transitionDuration(1000)
         .margins({top: 30, right: 50, bottom: 25, left: 40})
-        .dimension(yearDimension)
-        .group(BoxGroup)
-        .y(d3v3.scale.linear().domain([0,6000]))
-        .yAxisLabel("PSF")
-        .xAxis().tickFormat( function(v)                
-        { return setFormat2(v)});
+        .dimension(monthDimension)
+        .group(psfAverage)
+        .valueAccessor(function (d) {
+            return d.value.avg;
+        })
+        .brushOn(false)
+        .title(function(d){
+            return setFormat(d.key)
+                + "\nAverage PSF: " + d.value.avg;
+        })
+        .elasticY(true)
+        .x(d3v3.time.scale()
+            .domain(d3v3.extent(data,function(d) {return d.Sale_Date})))
+        .xAxis();
 
     TransBarChart /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
-        .width(990)
-        .height(300)
+        .width(500)
+        .height(150)
         .transitionDuration(1000)
         .margins({top: 30, right: 50, bottom: 25, left: 40})
         .dimension(monthDimension)
@@ -100,35 +110,56 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
         .xUnits(d3v3.time.months)
         .elasticY(true);
 
-    ScatterChart
-        .height(300)
-        .x(d3v3.scale.linear().domain([0, 100]))
-        .yAxisLabel("y")
-        .xAxisLabel("x")
-        .clipPadding(10)
-        .dimension(scatterDim)
-        .group(scatterGroup)
-        .x(d3v3.scale.linear().domain(d3.extent(data, function(d) {return (d.Level)})))
-        .brushOn(false)
-        .nonemptyOpacity(0.3)
-        .title(function(d){
-            return  'Project: ' + d.key[2] + '\nLevel: ' + d.key[0] + '\nPSM: $' + d.key[1];
-            });
+    // ScatterChart
+    //     .height(300)
+    //     .x(d3v3.scale.linear().domain([0, 100]))
+    //     .yAxisLabel("y")
+    //     .xAxisLabel("x")
+    //     .clipPadding(10)
+    //     .dimension(scatterDim)
+    //     .group(scatterGroup)
+    //     .x(d3v3.scale.linear().domain(d3.extent(data, function(d) {return (d.Level)})))
+    //     .brushOn(false)
+    //     .nonemptyOpacity(0.3)
+    //     .title(function(d){
+    //         return  'Project: ' + d.key[2] + '\nLevel: ' + d.key[0] + '\nPSM: $' + d.key[1];
+    //         });
 
 
     dc.renderAll();
 
-})
+});
 
 function resetData() {
     var PriceBoxPlot = PriceBoxPlot.filters();
     var TransBarChart = TransBarChart.filters();
-    var ScatterChart = ScatterChart.filters();
+    // var ScatterChart = ScatterChart.filters();
     PriceBoxPlot.filter(null);
     TransBarChart.filter(null);
     TransLineChart.filter(null);
     realis.remove();
     PriceBoxPlot.filter([priceChartFilters]);
     TransBarChart.filter([transChartFilters]);
-    ScatterChart.filter([transChartFilters]);
+    // ScatterChart.filter([transChartFilters]);
+}
+
+
+// reduce for group
+
+function reduceAdd(p, v) {
+    p.count = p.count + 1;
+    p.total = p.total + v.Price_PSF;
+    p.avg = Math.round(p.total / p.count);
+    return p;
+}
+
+function reduceRemove(p, v) {
+    p.count = p.count - 1;
+    p.total = p.total - v.Price_PSF;
+    p.avg = p.count ? Math.round(p.total / p.count) : 0;
+    return p;
+}
+
+function reduceInitial() {
+    return {count: 0, total: 0, avg: 0};
 }
