@@ -49,6 +49,8 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
 
     //init hexlayer
     hexLayer.data(PlanningRegionDim.top(Infinity));
+    hexLayerMini.data(PlanningRegionDim.top(Infinity));
+    
     // var ProjectNameGroup = ProjectNameDim.group();
     // var scatterGroup = scatterDim.group();
     var transTotal = monthDimension.group()
