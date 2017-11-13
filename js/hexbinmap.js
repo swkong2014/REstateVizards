@@ -1,4 +1,5 @@
 var center = [1.3521, 103.8198];
+var miniZoomFactor = 14;
 
 //        var detailsMap = L.map('detailsMap').setView(center, 13);
 //
@@ -67,6 +68,13 @@ var options = {
 
 hexLayer.dispatch().on('click', function(d, i) {
     console.log({ type: 'click', event: d, index: i, context: this });
+
+    var arr = []
+    for (i = 0; i < d.length; i++ ){
+        arr.push(d[i]['o']);
+    }
+
+    hexLayerMini.data(arr);
     zoomCenter = findCenter(d);
     loadMiniMap();
 });
@@ -135,37 +143,30 @@ function mapResize() {
 var zoomCenter = [1.3521, 103.8198]; //default center for minimap
 
 //minimap
-var detailsMap = new L.Map('detailsMap', {zoomControl: false}).setView(zoomCenter, 15);
-    L.tileLayer(osmUrl, {attribution: osmAttrib}).addTo(detailsMap);
+var detailsMap = new L.Map('detailsMap', {zoomControl: false}).setView(zoomCenter, miniZoomFactor);
+    L.tileLayer(osmUrl).addTo(detailsMap);
 //minimap
 
 //options for minimap
 var optionsMini = {
-    radius : 40,
+    radius : 12,
     opacity: 1,
     duration: 200
 };
 
 //load minimap
 function loadMiniMap(){
-    detailsMap.setView(zoomCenter, 16);
+    detailsMap.setView(zoomCenter, miniZoomFactor);
 }
 
 //Add this hexlayer to the minimap as well
 var hexLayerMini = L.hexbinLayer(optionsMini).addTo(detailsMap);
 
-//options for minimap
-var optionsMini = {
-    radius : 40,
-    opacity: 1,
-    duration: 200
-};
-
 //hexLayerMini Map details
 hexLayerMini.colorScale().range(['cyan', 'darkblue']);
 
 hexLayerMini
-    .radiusRange([4, 18])
+    .radiusRange([4, 13])
     .lng(function(d) { return d.Longtitude; })
     .lat(function(d) { return d.Latitude; })
     .colorValue(function(d) {
@@ -186,7 +187,7 @@ hexLayerMini
 
 hexLayerMini.dispatch().on('click', function(d, i) {
     console.log({ type: 'click', event: d, index: i, context: this });
-    var clickedNode = d3.select(this);
+    // var clickedNode = d3.select(this);
 });
 
 hexLayerMini.hoverHandler(L.HexbinHoverHandler.tooltip(options));

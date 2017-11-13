@@ -16,15 +16,21 @@
     border: 1px solid black;
     background-color: white;
 }
+
+#detailsMap{
+    position: absolute;
+    top:10px;
+    left: 912px;
+    z-index: 9999;
+    box-shadow: 10px 10px 5px #888888
+}
 #PriceLine{
     position: absolute;
     top:400px;
     left: 10px;
     z-index: 9999;
 }
-#slider {
-    width:300px;
-}
+
 #TransBar{
     position: absolute;
     top:400px;
@@ -34,8 +40,8 @@
 
 #buttoncontainer{
     position: absolute;
-    width:400px;
-    top:180px;
+    width:350px;
+    top:150px;
     left: 20px;
     z-index: 9999;
 }
