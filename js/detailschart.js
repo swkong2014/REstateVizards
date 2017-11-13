@@ -106,7 +106,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
             return 'Date: ' + setFormat(d.key)
             + "\nNo. of Transactions: " + d.value;
             })
-        .brushOn(false)
+        .brushOn(true)
         .xUnits(d3v3.time.months)
         .elasticY(true);
 
