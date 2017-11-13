@@ -16,6 +16,29 @@
     border: 1px solid black;
     background-color: white;
 }
+#PriceLine{
+    position: absolute;
+    top:400px;
+    left: 10px;
+    z-index: 9999;
+}
+#slider {
+    width:300px;
+}
+#TransBar{
+    position: absolute;
+    top:400px;
+    left: 760px;
+    z-index: 9999;
+}
+
+#buttoncontainer{
+    position: absolute;
+    width:400px;
+    top:180px;
+    left: 20px;
+    z-index: 9999;
+}
 
 #logo {
     height:80px;

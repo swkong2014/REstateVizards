@@ -48,9 +48,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
     // var AllDim = realis.dimension(function(d) {return d});
 
     //init hexlayer
-    console.log(hexLayer.data());
     hexLayer.data(PlanningRegionDim.top(Infinity));
-    console.log(hexLayer.data());
     // var ProjectNameGroup = ProjectNameDim.group();
     // var scatterGroup = scatterDim.group();
     var transTotal = monthDimension.group()
@@ -89,6 +87,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
                 + "\nAverage PSF: " + d.value.avg;
         })
         .elasticY(true)
+        .elasticX(true)
         .x(d3v3.time.scale()
             .domain(d3v3.extent(data,function(d) {return d.Sale_Date})))
         .xAxis();
@@ -99,6 +98,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
         .transitionDuration(1000)
         .margins({top: 30, right: 50, bottom: 25, left: 40})
         .dimension(monthDimension)
+        .dimension(SaleDateDim)
         .group(transTotal)
         .x(d3v3.time.scale().domain(d3v3.extent(data, function(d) {return (d.Sale_Date)})))
         .yAxisLabel("No. of Transactions")
@@ -106,8 +106,9 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
             return 'Date: ' + setFormat(d.key)
             + "\nNo. of Transactions: " + d.value;
             })
-        .brushOn(true)
+        .brushOn(false)
         .xUnits(d3v3.time.months)
+        .elasticX(true)
         .elasticY(true);
 
     // ScatterChart

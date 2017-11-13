@@ -174,7 +174,6 @@
 
             // Select the hex group for the current zoom level. This has
             // the effect of recreating the group if the zoom level has changed
-            // console.log('test');
             var join = this._d3Container.selectAll('g.hexbin')
                 .data([ this._map.getZoom() ], function(d) { return d; });
 
@@ -194,8 +193,7 @@
         },
 
         _createHexagons : function(g, data) {
-            console.log('createHexagons');
-            console.log(data);
+
             var that = this;
 
             // Create the bins using the hexbin layout
@@ -268,8 +266,6 @@
                 });
 
             // Grid
-
-            console.log("ENTER");
             enter.append('path').attr('class', 'hexbin-grid')
                 .attr('transform', function(d) {
                     return 'translate(' + d.x + ',' + d.y + ')';
@@ -470,7 +466,6 @@
         },
 
         data: function(v) {
-            console.log('data');
             if (!arguments.length) { return this._data; }
             this._data = (null != v) ? v : [];
 
@@ -497,12 +492,10 @@
          * Returns an array of the points in the path, or nested arrays of points in case of multi-polyline.
          */
         getLatLngs: function () {
-            console.log('getLatLngs');
             var that = this;
 
             // Map the data into an array of latLngs using the configured lat/lng accessors
             return this._data.map(function(d) {
-                console.log(d);
                 return L.latLng(that.options.lat(d), that.options.lng(d));
             });
         },
@@ -515,13 +508,7 @@
                 type: 'LineString',
                 coordinates: L.GeoJSON.latLngsToCoords(this.getLatLngs(), 0)
             });
-        },
-
-        test: function(){
-            console.log("gg");
-            return this._data;
         }
-
     });
 
 // Hover Handlers modify the hexagon and can be combined

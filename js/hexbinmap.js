@@ -29,7 +29,7 @@ osmAttrib = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetM
     osm = L.tileLayer(osmUrl, {maxZoom: 11,  minZoom: 11, attribution: osmAttrib });
 
 map = new L.Map('map', {layers: [osm], center: new L.LatLng(center[0], center[1]), zoom: 11, zoomControl:false});
-
+map.dragging.disable();
 var options = {
     radius : 14,
     opacity: 1,
@@ -47,8 +47,6 @@ hexLayer
     .colorValue(function(d) {
 
         var total = 0;
-//                console.log(d.length);
-//                console.log(d);
 
         for(var record in d){
             if(record != 'x' && record != 'y')
@@ -64,7 +62,6 @@ var options = {
     tooltipContent: function(d) {
         var content = "No. of Transactions: " + d.length +
             "<br/>Average Price PSF: $" + getAverage(d);
-        // console.log(d);
         return content;
     }
 };
@@ -110,6 +107,10 @@ function filterDate(startDate, endDate){
     SaleDateDim.filter(function(d){
         return d >= startDate && d <= endDate;
     });
+
+    console.log(startDate);
+    console.log(endDate);
+    console.log(SaleDateDim.top(5));
     hexLayer.data(PlanningRegionDim.top(Infinity));
     mapResize();
 }
@@ -117,6 +118,7 @@ function filterDate(startDate, endDate){
 function resetFilters(){
     SalesTypeDim.filterAll();
     PropertyTypeDim.filterAll();
+    SaleDateDim.filterAll();
     hexLayer.data(PlanningRegionDim.top(Infinity));
     mapResize();
 }
@@ -125,5 +127,5 @@ function mapResize() {
     map.setView([0,0],11);
     setTimeout(function() {
         map.setView(center,11);
-    }, 50);
+    }, 200);
 }
