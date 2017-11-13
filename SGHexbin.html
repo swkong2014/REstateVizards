@@ -118,7 +118,7 @@
         $("#slider").on("valuesChanged", function(e, data){
             currMinDate = data.values.min;
             currMaxDate = data.values.max;
-            console.log("min: " + currMinDate + " max: " + currMaxDate);
+            console.log("min: " + currMinDate.getTime() + " max: " + currMaxDate.getTime());
             
             filterDate(currMinDate, currMaxDate);
         });

@@ -109,7 +109,7 @@ function filterPropertyType(propertyType){
 
 function filterDate(startDate, endDate){
     SaleDateDim.filter(function(d){
-        return d >= startDate && d <= endDate;
+        return d.getTime() >= startDate.getTime() && d.getTime() <= endDate.getTime();
     });
     hexLayer.data(PlanningRegionDim.top(Infinity));
     mapResize();
