@@ -17,6 +17,30 @@ function getAverage(d) {
     return Math.round(total / d.length * 100) /100;
 }
 
+function getProjectNames(d) {
+
+    var projectNames = [];
+    for(var record in d){
+        if(record != 'x' && record != 'y'){
+            if (projectNames.indexOf(d[record]['o'].Project_Name) == -1)
+                projectNames.push(d[record]['o'].Project_Name);
+        }
+    }
+    return projectNames;
+}
+
+function getPlanningArea(d) {
+
+    var planningAreas = [];
+    for(var record in d){
+        if(record != 'x' && record != 'y'){
+            if (planningAreas.indexOf(d[record]['o'].Planning_Area) == -1)
+                planningAreas.push(d[record]['o'].Planning_Area);
+        }
+    }
+    return planningAreas;
+}
+
 //        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 //        var osmUrl = 'http://maps-{s}.onemap.sg/v2/Original/{z}/{x}/{y}.png'
 
@@ -60,8 +84,9 @@ hexLayer
 
 var options = {
     tooltipContent: function(d) {
-        var content = "No. of Transactions: " + d.length +
-            "<br/>Average Price PSF: $" + getAverage(d);
+        var content = "<font size=2>Planning Area: " + getPlanningArea(d) +
+        "<br>No. of Transactions: " + d.length +
+        "<br/>Average Price PSF: $" + getAverage(d) + "</font>";
         return content;
     }
 };
@@ -141,10 +166,10 @@ function mapResize() {
 
 //START OF MINIMAP
 var zoomCenter = [1.3521, 103.8198]; //default center for minimap
-
+var minimapUrl = 'http://maps-{s}.onemap.sg/v2/Grey/{z}/{x}/{y}.png' //default map for minimap
 //minimap
 var detailsMap = new L.Map('detailsMap', {zoomControl: false}).setView(zoomCenter, miniZoomFactor);
-    L.tileLayer(osmUrl).addTo(detailsMap);
+    L.tileLayer(minimapUrl).addTo(detailsMap);
 //minimap
 
 //options for minimap
@@ -190,7 +215,18 @@ hexLayerMini.dispatch().on('click', function(d, i) {
     // var clickedNode = d3.select(this);
 });
 
-hexLayerMini.hoverHandler(L.HexbinHoverHandler.tooltip(options));
+//tooltip for minimap
+var optionsMinimap = {
+    tooltipContent: function(d) {
+
+        var content = "<font size=2>Project Name(s): " + getProjectNames(d) +
+            "<br/>No. of Transactions: " + d.length +
+            "<br/>Average Price PSF: $" + getAverage(d) + "</font>";
+        return content;
+    }
+};
+
+hexLayerMini.hoverHandler(L.HexbinHoverHandler.tooltip(optionsMinimap));
 
 function redrawMiniMap(){
     hexLayerMini.data(PlanningRegionDim.top(Infinity));

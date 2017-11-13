@@ -41,7 +41,7 @@
 #buttoncontainer{
     position: absolute;
     width:350px;
-    top:150px;
+    top:100px;
     left: 20px;
     z-index: 9999;
 }

@@ -22,6 +22,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
 
 
     data.forEach(function(d){
+        d.Project_Name = d.Project_Name;
         d.Sale_Date = dateParser(d.Sale_Date);
         d.Planning_Area = d.Planning_Area; 
         d.Price_PSF = +d.Price_PSF

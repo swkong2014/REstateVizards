@@ -14,10 +14,18 @@
         <script src ='js/crossfilter.js'></script>
         <script src ='js/dc.js'></script>
         <link rel='stylesheet' href='css/dc.css'>
-        <link rel="stylesheet" href="css/iThing.css" type="text/css" />
 
-        <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-        <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+        <!-- for DATE RANGE SLIDER AND RADIO BUTTONS -->
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+            $( function() {
+                $( "input" ).checkboxradio();
+                $( "fieldset" ).controlgroup();
+            } );
+        </script>
+        <!-- for DATE RANGE SLIDER AND RADIO BUTTONS -->
 
         <!-- for DATE RANGE SLIDER -->
         <link rel="stylesheet" href="css/iThing.css" type="text/css" />
@@ -46,7 +54,7 @@
             <img id="logo" src="images/restatelogo.png" alt="REstate Vizards">
         </div>
         <div id="buttoncontainer">
-            <button type="button" onclick="filterSalesType(null);dc.redrawAll();">All Sales</button>
+            <!--<button type="button" onclick="filterSalesType(null);dc.redrawAll();">All Sales</button>
             <button type="button" onclick="filterSalesType('Resale');dc.redrawAll();">Resales</button>
             <button type="button" onclick="filterSalesType('New Sale');dc.redrawAll();">New Sales</button>
             <br/>
@@ -55,11 +63,31 @@
             <button type="button" onclick="filterPropertyType('Condominium');dc.redrawAll();">Condominium</button>
             <button type="button" onclick="filterPropertyType('Executive Condominium');dc.redrawAll();">Executive Condominium</button>
             <br/>
+            <button type="button" onclick="resetFilters();dc.redrawAll();">Reset Filters</button>-->
+            <fieldset>
+            <legend>Select Property Type: </legend>
+                <label for="AllP"><font size="1">All Property Types</font></label>
+                <input type="radio" name="AllP" id="AllP" onclick="filterPropertyType(null);dc.redrawAll();">
+                <label for="Apartment"><font size="1">Apartment</font></label>
+                <input type="radio" name="AllP" id="Apartment" onclick="filterPropertyType('Apartment');dc.redrawAll();">
+                <label for="Condo"><font size="1">Condominium</font></label>
+                <input type="radio" name="AllP" id="Condo" onclick="filterPropertyType('Condominium');dc.redrawAll();">
+                <label for="Executive"><font size="1">Executive Condominium</font></label>
+                <input type="radio" name="AllP" id="Executive" onclick="filterPropertyType('Executive Condominium');dc.redrawAll();">
+            </fieldset>
 
-            <button type="button" onclick="resetFilters();dc.redrawAll();">Reset Filters</button>
-            <br/>
+            <fieldset>
+            <legend>Select Sales Type: </legend>
+                <label for="AllS"><font size="1">All Sales</font></label>
+                <input type="radio" name="AllS" id="AllS" onclick="filterSalesType(null);dc.redrawAll();">
+                <label for="Resales"><font size="1">Resales</font></label>
+                <input type="radio" name="AllS" id="Resales" onclick="filterSalesType('Resale');dc.redrawAll();">
+                <label for="NewSales"><font size="1">New Sales</font></label>
+                <input type="radio" name="AllS" id="NewSales" onclick="filterSalesType('New Sale');dc.redrawAll();">
+            </fieldset>
+            
+            <div>Date</div>
             <div id="slider"></div>
-
         </div>
     </div>
     <div class="col">
