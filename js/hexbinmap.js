@@ -64,18 +64,14 @@ var options = {
     tooltipContent: function(d) {
         var content = "No. of Transactions: " + d.length +
             "<br/>Average Price PSF: $" + getAverage(d);
+        // console.log(d);
         return content;
     }
 };
 
-setOnclick();
-function setOnclick(){
-    hexLayer.dispatch().on('click', function(d, i) {
-        console.log({ type: 'click', event: d, index: i, context: this });
-    });
-    console.log(hexLayer);
-    // console.log(hexLayer.dispatch());
-}
+hexLayer.dispatch().on('click', function(d, i) {
+    console.log({ type: 'click', event: d, index: i, context: this });
+});
 
 hexLayer.hoverHandler(L.HexbinHoverHandler.compound({
     handlers: [
@@ -84,7 +80,6 @@ hexLayer.hoverHandler(L.HexbinHoverHandler.compound({
     ]
 }));
 
-// console.log(hexLayer.test());
 
 function filterSalesType(salesType){
     if (salesType){
@@ -94,10 +89,8 @@ function filterSalesType(salesType){
     } else {
         SalesTypeDim.filter(salesType);
     }
-    console.log(hexLayer.data());
     hexLayer.data(PlanningRegionDim.top(Infinity));
-    hexLayer.redraw();
-    console.log(hexLayer.data());
+    mapResize();
 }
 
 function filterPropertyType(propertyType){
@@ -109,6 +102,8 @@ function filterPropertyType(propertyType){
         PropertyTypeDim.filterAll();
     }
     hexLayer.data(PlanningRegionDim.top(Infinity));
+    map.invalidateSize()
+    mapResize();
 }
 
 function filterDate(startDate, endDate){
@@ -116,22 +111,19 @@ function filterDate(startDate, endDate){
         return d >= startDate && d <= endDate;
     });
     hexLayer.data(PlanningRegionDim.top(Infinity));
-    hexLayer.dispatch().on('click',null);
-    // setOnclick();
-    // setOnclick();
-    // PriceLineChart.
+    mapResize();
 }
 
 function resetFilters(){
     SalesTypeDim.filterAll();
     PropertyTypeDim.filterAll();
     hexLayer.data(PlanningRegionDim.top(Infinity));
-}
-    // array of dictionaries
-function addData(){
-
+    mapResize();
 }
 
-function removeData(){
-
+function mapResize() {
+    map.setView([0,0],11);
+    setTimeout(function() {
+        map.setView(center,11);
+    }, 50);
 }

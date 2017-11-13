@@ -157,7 +157,6 @@
          * @private
          */
         redraw : function() {
-            console.log('redrawing');
             var that = this;
 
             if (!that._map) {
@@ -178,7 +177,6 @@
             // console.log('test');
             var join = this._d3Container.selectAll('g.hexbin')
                 .data([ this._map.getZoom() ], function(d) { return d; });
-            console.log(this._map.getZoom());
 
             // enter
             var enter = join.enter().append('g')
@@ -197,6 +195,7 @@
 
         _createHexagons : function(g, data) {
             console.log('createHexagons');
+            console.log(data);
             var that = this;
 
             // Create the bins using the hexbin layout
@@ -269,6 +268,8 @@
                 });
 
             // Grid
+
+            console.log("ENTER");
             enter.append('path').attr('class', 'hexbin-grid')
                 .attr('transform', function(d) {
                     return 'translate(' + d.x + ',' + d.y + ')';
@@ -489,8 +490,6 @@
             if (!arguments.length) { return this._hoverHandler; }
             this._hoverHandler = (null != v) ? v : L.HexbinHoverHandler.none();
 
-            this.redraw();
-
             return this;
         },
 
@@ -520,6 +519,7 @@
 
         test: function(){
             console.log("gg");
+            return this._data;
         }
 
     });

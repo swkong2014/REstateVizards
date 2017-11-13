@@ -11995,6 +11995,7 @@ var Canvas = Renderer.extend({
 	// so we emulate that by calculating what's under the mouse on mousemove/click manually
 
 	_onClick: function (e) {
+		console.log("CLICKED");
 		var point = this._map.mouseEventToLayerPoint(e), layer, clickedLayer;
 
 		for (var order = this._drawFirst; order; order = order.next) {

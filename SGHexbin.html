@@ -5,7 +5,7 @@
               integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
               crossorigin=""/>
         <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-        <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js"></script>
+        <script src="js/leaflet-src.js"></script>
         <script src="js/d3-hexbin.v0.2.min.js"></script>
         <script src="js/leaflet-d3.js" charset="utf-8"></script>
         <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -24,6 +24,7 @@
         <script src="js/jQRangeSlider/jquery.mousewheel.min.js"></script>
         <script src="js/jQRangeSlider/jQRangeSliderMouseTouch.js"></script>
         <script src="js/jQRangeSlider/jQRangeSliderDraggable.js"></script>
+        <script src="js/jQRangeSlider/jQRangeSliderHandle.js"></script>
         <script src="js/jQRangeSlider/jQRangeSliderHandle.js"></script>
         <script src="js/jQRangeSlider/jQRangeSliderBar.js"></script>
         <script src="js/jQRangeSlider/jQRangeSliderLabel.js"></script>
@@ -60,7 +61,6 @@
         </div>
         <div class="row">
             <div id="PriceLine">
-                <h4>Line Chart</h4>
                 <strong>Price Trend</strong>
                 <span class="reset" style="display: none;">range: <span class="filter"></span></span>
                 <a class="reset" href="javascript:PriceBoxPlot.filterAll();dc.redrawAll();"
@@ -70,10 +70,8 @@
             </div>
         </div>
 
-
         <div class="row">
             <div id="TransBar">
-                <h4>Line Chart</h4>
                 <strong>Historical Volume Transaction </strong>
                 <span class="reset" style="display: none;">range: <span class="filter"></span></span>
                 <a class="reset" href="javascript:PriceBoxPlot.filterAll();dc.redrawAll();"
@@ -108,7 +106,7 @@
                     },
             defaultValues: {
                    min: new Date(2012, 0, 1),
-                   max: new Date(2012, 5, 30)
+                   max: new Date(2017, 9, 30)
                     }
 
         });
