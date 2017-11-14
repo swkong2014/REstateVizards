@@ -198,7 +198,7 @@ function mapResize() {
 }
 
 //START OF MINIMAP
-var zoomCenter = [1.3521, 103.8198]; //default center for minimap
+var zoomCenter = [1.2965676, 103.8499297]; //default center for minimap
 var miniZoomFactor = 14; //zoom value for minimap
 var minimapUrl = 'http://maps-{s}.onemap.sg/v2/Grey/{z}/{x}/{y}.png' //default map for minimap
 //minimap
