@@ -1,5 +1,6 @@
 var center = [1.3521, 103.8198];
-var miniZoomFactor = 14;
+
+var dateParser = d3v3.time.format("%d-%b-%y").parse;
 
 //        var detailsMap = L.map('detailsMap').setView(center, 13);
 //
@@ -39,6 +40,34 @@ function getPlanningArea(d) {
         }
     }
     return planningAreas;
+}
+
+function getDateRange(d) {
+
+    var minDate;
+    var maxDate;
+    
+    var firstRow = true;
+    for(var record in d){
+
+        if(record != 'x' && record != 'y'){
+            if (firstRow){
+                minDate = d[record]['o'].Sale_Date;
+                maxDate = d[record]['o'].Sale_Date;
+                firstRow = false;
+            }else {
+                if (minDate > d[record]['o'].Sale_Date){
+                    minDate = d[record]['o'].Sale_Date;
+                }
+                if (maxDate < d[record]['o'].Sale_Date){
+                    maxDate = d[record]['o'].Sale_Date;
+                }
+            }
+        }
+    }
+    minDateString = minDate.getDate() + "/" + (minDate.getMonth()+1) + "/" + minDate.getFullYear();
+    maxDateString = maxDate.getDate() + "/" + (maxDate.getMonth()+1) + "/" + maxDate.getFullYear();
+    return minDateString + " - " + maxDateString;
 }
 
 //        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -98,6 +127,10 @@ hexLayer.dispatch().on('click', function(d, i) {
     for (i = 0; i < d.length; i++ ){
         arr.push(d[i]['o']);
     }
+
+    //test
+    
+    //test
 
     hexLayerMini.data(arr);
     zoomCenter = findCenter(d);
@@ -166,6 +199,7 @@ function mapResize() {
 
 //START OF MINIMAP
 var zoomCenter = [1.3521, 103.8198]; //default center for minimap
+var miniZoomFactor = 14; //zoom value for minimap
 var minimapUrl = 'http://maps-{s}.onemap.sg/v2/Grey/{z}/{x}/{y}.png' //default map for minimap
 //minimap
 var detailsMap = new L.Map('detailsMap', {zoomControl: false}).setView(zoomCenter, miniZoomFactor);
@@ -220,6 +254,7 @@ var optionsMinimap = {
     tooltipContent: function(d) {
 
         var content = "<font size=2>Project Name(s): " + getProjectNames(d) +
+            "<br/>Date of Transactions: " + getDateRange(d) +
             "<br/>No. of Transactions: " + d.length +
             "<br/>Average Price PSF: $" + getAverage(d) + "</font>";
         return content;
