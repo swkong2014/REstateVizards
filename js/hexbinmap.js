@@ -119,20 +119,27 @@ var options = {
         return content;
     }
 };
-
+var currentNode = null;
 hexLayer.dispatch().on('click', function(d, i) {
     console.log({ type: 'click', event: d, index: i, context: this });
+    // hexbinFilter(d, true);
+    if(currentNode){
+        d3.select(currentNode).style('stroke', null);
+    }
+    d3.select(this).style("stroke", "red");
+    currentNode = this;
 
     var arr = []
+    items = [];
     for (i = 0; i < d.length; i++ ){
         arr.push(d[i]['o']);
+        if(d[i]["o"]){
+            items.push(d[i]["o"]["index"]);
+        }
     }
 
-    //test
-    
-    //test
-
     hexLayerMini.data(arr);
+    hexbinFilter();
     zoomCenter = findCenter(d);
     loadMiniMap();
 });
@@ -165,8 +172,6 @@ function filterPropertyType(propertyType){
     } else {
         PropertyTypeDim.filterAll();
     }
-    hexLayer.data(PlanningRegionDim.top(Infinity));
-    map.invalidateSize()
     mapResize();
 }
 
@@ -174,27 +179,27 @@ function filterDate(startDate, endDate){
     SaleDateDim.filter(function(d){
         return d.getTime() >= startDate.getTime() && d.getTime() <= endDate.getTime();
     });
-
-    console.log(startDate);
-    console.log(endDate);
-    console.log(SaleDateDim.top(5));
-    hexLayer.data(PlanningRegionDim.top(Infinity));
     mapResize();
 }
 
-function resetFilters(){
-    SalesTypeDim.filterAll();
-    PropertyTypeDim.filterAll();
-    SaleDateDim.filterAll();
-    hexLayer.data(PlanningRegionDim.top(Infinity));
-    mapResize();
-}
+// function resetFilters(){
+//     SalesTypeDim.filterAll();
+//     PropertyTypeDim.filterAll();
+//     SaleDateDim.filterAll();
+//     mapResize();
+// }
 
 function mapResize() {
+    hexLayer.data(PlanningRegionDim.top(Infinity));
+    hexLayerMini.data(PlanningRegionDim.top(Infinity));
+
     map.setView([0,0],11);
+    detailsMap.setView([0,0],miniZoomFactor)
     setTimeout(function() {
         map.setView(center,11);
+        detailsMap.setView(zoomCenter,miniZoomFactor);
     }, 200);
+
 }
 
 //START OF MINIMAP
@@ -203,7 +208,8 @@ var miniZoomFactor = 14; //zoom value for minimap
 var minimapUrl = 'http://maps-{s}.onemap.sg/v2/Grey/{z}/{x}/{y}.png' //default map for minimap
 //minimap
 var detailsMap = new L.Map('detailsMap', {zoomControl: false}).setView(zoomCenter, miniZoomFactor);
-    L.tileLayer(minimapUrl).addTo(detailsMap);
+    L.tileLayer(minimapUrl, {maxZoom: miniZoomFactor,  minZoom: miniZoomFactor}).addTo(detailsMap);
+    detailsMap.dragging.disable();
 //minimap
 
 //options for minimap
@@ -244,9 +250,10 @@ hexLayerMini
     })
     .radiusValue(function(d) { return d.length; });
 
+var items = [];
 hexLayerMini.dispatch().on('click', function(d, i) {
     console.log({ type: 'click', event: d, index: i, context: this });
-    // var clickedNode = d3.select(this);
+    // console.log(IndexDim.top(Infinity));
 });
 
 //tooltip for minimap
@@ -291,4 +298,17 @@ function findCenter(data) {
     var latAvg = sumLat / latArray.length;
 
     return [latAvg,longAvg];
+}
+
+function hexbinFilter(){
+    // if (clearArr) item = [];
+    // for (item in d){
+    //     if(d[item]["o"])
+    //         items.push(d[item]["o"]["index"]);
+    // }
+    IndexDim.filter(function(d){
+        return items.includes(d);
+    });
+    dc.redrawAll();
+
 }

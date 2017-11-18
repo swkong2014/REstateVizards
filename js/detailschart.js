@@ -20,7 +20,7 @@ var scatterDim = null;
 d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
     if(error) throw error;
 
-
+    var index = 0;
     data.forEach(function(d){
         d.Project_Name = d.Project_Name;
         d.Sale_Date = dateParser(d.Sale_Date);
@@ -28,6 +28,8 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
         d.Price_PSF = +d.Price_PSF
         d.Level = +d.Level
         d.Area_sqm = +d.Area_sqm;
+        d.index = index;
+        index++;
     });
 
     // Preparing Dimensions and Groups
@@ -37,6 +39,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
     //var ProjectNameDim = realis.dimension(function(d) {return d.Project_Name});
     // var psfDim = realis.dimension(function(d) {return d.Price_PSF});
     SaleDateDim = realis.dimension(function(d) {return (d.Sale_Date)});
+    IndexDim = realis.dimension(function(d) {return (d.index)});
     PlanningRegionDim = realis.dimension(function(d) {return d.Planning_Region});
     AllDim = realis.dimension(function(d) {return d});
     yearDimension = realis.dimension(function(d) {return d3v3.time.year(d.Sale_Date)});
@@ -50,7 +53,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
 
     //init hexlayer
     hexLayer.data(PlanningRegionDim.top(Infinity));
-    hexLayerMini.data(PlanningRegionDim.top(Infinity));
+    // hexLayerMini.data(PlanningRegionDim.top(Infinity));
     
     // var ProjectNameGroup = ProjectNameDim.group();
     // var scatterGroup = scatterDim.group();
