@@ -254,6 +254,22 @@ var items = [];
 hexLayerMini.dispatch().on('click', function(d, i) {
     console.log({ type: 'click', event: d, index: i, context: this });
     // console.log(IndexDim.top(Infinity));
+
+    if(currentNode){
+        d3.select(currentNode).style('stroke', null);
+    }
+    d3.select(this).style("stroke", "red");
+    currentNode = this;
+
+    items = [];
+    for (i = 0; i < d.length; i++ ){
+        // arr.push(d[i]['o']);
+        if(d[i]["o"]){
+            items.push(d[i]["o"]["index"]);
+        }
+    }
+
+    hexbinFilter();
 });
 
 //tooltip for minimap
