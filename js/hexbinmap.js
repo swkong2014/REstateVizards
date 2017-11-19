@@ -289,7 +289,6 @@ var optionsMinimap = {
     tooltipContent: function(d) {
 
         var content = "<font size=2>Project Name(s): " + getProjectNames(d) +
-            "<br/>Planning Area: " + getPlanningArea(d) +
             "<br/>Date of Transactions: " + getDateRange(d) +
             "<br/>No. of Transactions: " + d.length +
             "<br/>Average Price PSF: $" + getAverage(d) + "</font>";
