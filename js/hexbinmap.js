@@ -164,6 +164,18 @@ function filterSalesType(salesType){
     mapResize();
 }
 
+function filterPlanningArea(planningArea){
+    planningArea = "Bukit Merah";
+    if (planningArea){
+        PlanningAreaDim.filter(function(d){
+            return planningArea === d;
+        });
+    } else {
+        PlanningAreaDim.filter(salesType);
+    }
+    mapResize();
+}
+
 function filterPropertyType(propertyType){
     if (propertyType){
         PropertyTypeDim.filter(function(d){
@@ -182,12 +194,12 @@ function filterDate(startDate, endDate){
     mapResize();
 }
 
-// function resetFilters(){
-//     SalesTypeDim.filterAll();
-//     PropertyTypeDim.filterAll();
-//     SaleDateDim.filterAll();
-//     mapResize();
-// }
+function resetFilters(){
+    SalesTypeDim.filterAll();
+    PropertyTypeDim.filterAll();
+    SaleDateDim.filterAll();
+    mapResize();
+}
 
 function mapResize() {
     hexLayer.data(PlanningRegionDim.top(Infinity));
@@ -277,6 +289,7 @@ var optionsMinimap = {
     tooltipContent: function(d) {
 
         var content = "<font size=2>Project Name(s): " + getProjectNames(d) +
+            "<br/>Planning Area: " + getPlanningArea(d) +
             "<br/>Date of Transactions: " + getDateRange(d) +
             "<br/>No. of Transactions: " + d.length +
             "<br/>Average Price PSF: $" + getAverage(d) + "</font>";

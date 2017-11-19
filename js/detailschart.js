@@ -11,8 +11,8 @@ var PriceLineChart = dc.lineChart('#PriceLine');
 
 var realis = crossfilter();
 var PlanningRegionDim = null;
+var PlanningAreaDim = null;
 var SaleDateDim = null;
-var PlanningRegionDim = null;
 var AllDim = null;
 var yearDimension = null;
 var monthDimension = null; 
@@ -41,6 +41,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
     SaleDateDim = realis.dimension(function(d) {return (d.Sale_Date)});
     IndexDim = realis.dimension(function(d) {return (d.index)});
     PlanningRegionDim = realis.dimension(function(d) {return d.Planning_Region});
+    PlanningAreaDim = realis.dimension(function(d) {return d.Planning_Area});
     AllDim = realis.dimension(function(d) {return d});
     yearDimension = realis.dimension(function(d) {return d3v3.time.year(d.Sale_Date)});
     monthDimension = realis.dimension(function(d) {return d3v3.time.month(d.Sale_Date)}) ;
