@@ -198,12 +198,22 @@ function resetFilters(){
     SalesTypeDim.filterAll();
     PropertyTypeDim.filterAll();
     SaleDateDim.filterAll();
+    IndexDim.filterAll();
+    // slider.destroy;
+    filterDate(new Date(2012, 0, 1), new Date(2017, 9, 30));
+    reset = true;
+    dc.redrawAll();
     mapResize();
 }
-
+var reset = false;
 function mapResize() {
+    if (reset){
+        hexLayerMini.data(null);
+        reset = false;
+    } else {
+        hexLayerMini.data(PlanningRegionDim.top(Infinity));
+    }
     hexLayer.data(PlanningRegionDim.top(Infinity));
-    hexLayerMini.data(PlanningRegionDim.top(Infinity));
 
     map.setView([0,0],11);
     detailsMap.setView([0,0],miniZoomFactor)

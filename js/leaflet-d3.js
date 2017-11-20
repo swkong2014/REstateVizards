@@ -546,6 +546,8 @@
                     }
                     var h = div.clientHeight, w = div.clientWidth;
 
+                    console.log(gCoords);
+
                     tooltip
                         .style('top', '' + event$$1.clientY - gCoords[1] - h - 16 + 'px')
                         .style('left', '' + event$$1.clientX - gCoords[0] - w/2 + 'px');

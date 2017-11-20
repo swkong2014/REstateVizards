@@ -51,7 +51,7 @@
         <div id="map" style="width: 1260px; height: 580px; border: 1px solid #ccc"></div>
         <div id="detailsMap" style="width: 340px; height: 340px; border: 1px solid #ccc"></div>
         <div id="header">
-            <img id="logo" src="images/restatelogo.png" alt="REstate Vizards">
+            <img id="logo" src="images/restatelogo2.png" alt="REstate Vizards">
         </div>
         <div id="buttoncontainer">
             <!--<button type="button" onclick="filterSalesType(null);dc.redrawAll();">All Sales</button>
@@ -89,6 +89,9 @@
             <div>
                 <div style="float:right; width:350px" id="slider"></div>
             </div>
+            <div>
+                <button onclick="resetFilters()">Reset filters</button>
+            </div>
         </div>
     </div>
     <div class="col">
@@ -125,7 +128,7 @@
 
     <script>
 
-        $("#slider").dateRangeSlider({
+        var slider = $("#slider").dateRangeSlider({
             range: {min: new Date(2012, 0, 1)}, //use minimum range
             bounds: {
                    min: new Date(2012, 0, 1),
