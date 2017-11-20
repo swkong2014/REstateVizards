@@ -137,7 +137,6 @@ hexLayer.dispatch().on('click', function(d, i) {
             items.push(d[i]["o"]["index"]);
         }
     }
-
     hexLayerMini.data(arr);
     hexbinFilter();
     zoomCenter = findCenter(d);
@@ -153,6 +152,7 @@ hexLayer.hoverHandler(L.HexbinHoverHandler.compound({
 
 
 function filterSalesType(salesType){
+    removeIndexFilter();
     if (salesType){
         SalesTypeDim.filter(function(d){
             return salesType === d;
@@ -177,6 +177,7 @@ function filterPlanningArea(planningArea){
 }
 
 function filterPropertyType(propertyType){
+    removeIndexFilter();
     if (propertyType){
         PropertyTypeDim.filter(function(d){
             return propertyType === d;
@@ -188,6 +189,7 @@ function filterPropertyType(propertyType){
 }
 
 function filterDate(startDate, endDate){
+    removeIndexFilter();
     SaleDateDim.filter(function(d){
         return d.getTime() >= startDate.getTime() && d.getTime() <= endDate.getTime();
     });
@@ -195,12 +197,17 @@ function filterDate(startDate, endDate){
 }
 
 function resetFilters(){
-    SalesTypeDim.filterAll();
-    PropertyTypeDim.filterAll();
+    // SalesTypeDim.filterAll();
+    // PropertyTypeDim.filterAll();
     SaleDateDim.filterAll();
     IndexDim.filterAll();
     // slider.destroy;
     filterDate(new Date(2012, 0, 1), new Date(2017, 9, 30));
+    // d3.select('#AllP').attr("checked","checked");
+    $("#AllP").click();
+    $("#AllS").click();
+
+    // document.getElementById("ALLP").checked = true;
     reset = true;
     dc.redrawAll();
     mapResize();
@@ -230,8 +237,8 @@ var miniZoomFactor = 14; //zoom value for minimap
 var minimapUrl = 'http://maps-{s}.onemap.sg/v2/Grey/{z}/{x}/{y}.png' //default map for minimap
 //minimap
 var detailsMap = new L.Map('detailsMap', {zoomControl: false}).setView(zoomCenter, miniZoomFactor);
-    L.tileLayer(minimapUrl, {maxZoom: miniZoomFactor,  minZoom: miniZoomFactor}).addTo(detailsMap);
-    detailsMap.dragging.disable();
+    L.tileLayer(minimapUrl, {maxZoom: 18,  minZoom: miniZoomFactor}).addTo(detailsMap);
+    // detailsMap.dragging.disable();
 //minimap
 
 //options for minimap
@@ -348,5 +355,8 @@ function hexbinFilter(){
         return items.includes(d);
     });
     dc.redrawAll();
+}
 
+function removeIndexFilter(){
+    IndexDim.filterAll();
 }

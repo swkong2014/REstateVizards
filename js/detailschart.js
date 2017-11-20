@@ -95,6 +95,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
         })
         .elasticY(true)
         .elasticX(true)
+        .yAxisLabel("Avg PSF")
         .x(d3v3.time.scale()
             .domain(d3v3.extent(data,function(d) {return d.Sale_Date})))
         .xAxis();
