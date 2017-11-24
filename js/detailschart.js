@@ -95,7 +95,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
         })
         .elasticY(true)
         .elasticX(true)
-        .yAxisLabel("Avg PSF")
+        // .yAxisLabel("Avg PSF")
         .x(d3v3.time.scale()
             .domain(d3v3.extent(data,function(d) {return d.Sale_Date})))
         .xAxis();
@@ -109,7 +109,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
         .dimension(SaleDateDim)
         .group(transTotal)
         .x(d3v3.time.scale().domain(d3v3.extent(data, function(d) {return (d.Sale_Date)})))
-        .yAxisLabel("No. of Transactions")
+        // .yAxisLabel("No. of Transactions")
         .title(function(d){
             return 'Date: ' + setFormat(d.key)
             + "\nNo. of Transactions: " + d.value;

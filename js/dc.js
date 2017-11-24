@@ -3463,8 +3463,8 @@ dc.coordinateGridMixin = function (_chart) {
         _yAxisLabel = labelText;
         _chart.margins().left -= _yAxisLabelPadding;
         _yAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
-        _chart.margins().left += _yAxisLabelPadding;
-        return _chart;
+        _chart.margins().left += _yAxisLabelPadding;;
+        return _chart
     };
 
     /**
