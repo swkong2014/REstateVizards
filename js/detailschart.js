@@ -82,7 +82,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
         .width(500)
         .height(150)
         .transitionDuration(1000)
-        .margins({top: 30, right: 50, bottom: 25, left: 40})
+        .margins({top: 5, right: 50, bottom: 25, left: 40})
         .dimension(monthDimension)
         .group(psfAverage)
         .valueAccessor(function (d) {
@@ -104,7 +104,7 @@ d3v3.csv('data/Realis12-17_geocoded_new.csv', function(error, data) {
         .width(500)
         .height(150)
         .transitionDuration(1000)
-        .margins({top: 30, right: 50, bottom: 25, left: 40})
+        .margins({top: 5, right: 50, bottom: 25, left: 40})
         .dimension(monthDimension)
         .dimension(SaleDateDim)
         .group(transTotal)
